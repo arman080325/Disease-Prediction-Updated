@@ -1,39 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Disease Prediction System — ML Health Screening</title>
-<meta name="description" content="An ML-powered symptom checker using an ensemble model trained on 41 diseases and 132 symptoms, with SHAP explainability and a downloadable PDF report." />
+<meta name="theme-color" content="#F4F7F6" />
+<title>Vitals Check — AI Symptom Screening</title>
+<meta name="description" content="An ML-powered symptom checker trained on 41 diseases and 133 symptoms, with SHAP explainability and a downloadable clinical PDF report." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <header class="app-header">
-    <div class="app-header-inner">
-      <span class="app-badge">◆ ML Health Screening</span>
-      <h1>Disease Prediction System</h1>
-      <p>Select your symptoms below to get a ranked prediction, model confidence, an explainability
-         breakdown of which symptoms drove the result, and a downloadable PDF report.</p>
+  <!-- ── signature vitals strip (decorative ECG trace) ─────────────── -->
+  <div class="vt-strip" aria-hidden="true">
+    <svg viewBox="0 0 1200 40" preserveAspectRatio="none">
+      <path class="vt-strip-line" d="M0,20 L360,20 L390,4 L415,36 L440,10 L465,20 L1200,20"/>
+    </svg>
+  </div>
+
+  <!-- ── top nav ──────────────────────────────────────────────────── -->
+  <nav class="vt-nav">
+    <div class="vt-nav-inner">
+      <div class="vt-brand">
+        <span class="vt-brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 21s-7.2-4.6-10-9.3C.3 8.4 1.8 5 5.2 5c2 0 3.4 1.1 4.3 2.4C10.4 6.1 11.8 5 13.8 5c3.4 0 4.9 3.4 3.2 6.7C19.2 16.4 12 21 12 21z"/></svg>
+        </span>
+        <span class="vt-brand-name">Vitals Check</span>
+      </div>
+      <div class="vt-nav-actions">
+        <button id="themeToggle" class="vt-icon-btn" aria-label="Switch to dark mode" title="Toggle theme">
+          <svg class="vt-icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+          <svg class="vt-icon-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
+        </button>
+        <a class="vt-icon-btn" href="https://github.com/arman080325/Disease-Prediction-Updated" target="_blank" rel="noopener noreferrer" aria-label="View source on GitHub" title="Source on GitHub">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── hero ─────────────────────────────────────────────────────── -->
+  <header class="vt-hero">
+    <div class="vt-hero-inner">
+      <span class="vt-eyebrow">AI-Assisted Symptom Screening</span>
+      <h1>Describe what you're feeling. Get a ranked, explainable read.</h1>
+      <p class="vt-hero-sub">
+        Select your symptoms below for a ranked disease prediction, a model confidence
+        score, a plain-English breakdown of which symptoms drove that result, and a
+        downloadable clinical-style PDF report.
+      </p>
+      <div class="vt-stat-strip">
+        <div class="vt-stat"><span class="vt-stat-num">41</span><span class="vt-stat-label">diseases screened</span></div>
+        <div class="vt-stat-div" aria-hidden="true"></div>
+        <div class="vt-stat"><span class="vt-stat-num">133</span><span class="vt-stat-label">tracked symptoms</span></div>
+        <div class="vt-stat-div" aria-hidden="true"></div>
+        <div class="vt-stat"><span class="vt-stat-num">SHAP</span><span class="vt-stat-label">explained, not a black box</span></div>
+      </div>
     </div>
   </header>
 
-  <main class="layout">
+  <!-- ── mobile stepper (hidden on desktop) ──────────────────────────── -->
+  <div class="vt-stepper" role="tablist" aria-label="Screening steps">
+    <button class="vt-step is-active" data-step="patient" role="tab" aria-selected="true">
+      <span class="vt-step-num">1</span> Patient
+    </button>
+    <button class="vt-step" data-step="symptoms" role="tab" aria-selected="false">
+      <span class="vt-step-num">2</span> Symptoms
+    </button>
+    <button class="vt-step" data-step="results" role="tab" aria-selected="false">
+      <span class="vt-step-num">3</span> Results
+    </button>
+  </div>
 
-    <!-- ── LEFT: patient info + symptom picker ─────────────────────── -->
-    <section class="panel panel--input">
-      <div class="panel-block">
-        <h2>1. Patient Details</h2>
-        <div class="field-grid">
-          <label class="field">
+  <main class="vt-layout">
+
+    <!-- ── LEFT: patient info + symptom picker ───────────────────────── -->
+    <section class="vt-col vt-col--input">
+
+      <div class="vt-card" data-panel="patient">
+        <h2><span class="vt-card-num">1</span> Patient details</h2>
+        <div class="vt-field-grid">
+          <label class="vt-field">
             <span>Name</span>
             <input type="text" id="patientName" placeholder="John Doe" value="John Doe" />
           </label>
-          <label class="field">
+          <label class="vt-field">
             <span>Age</span>
             <input type="number" id="patientAge" min="1" max="120" value="25" />
           </label>
-          <label class="field">
+          <label class="vt-field">
             <span>Gender</span>
             <select id="patientGender">
               <option>Male</option>
@@ -41,78 +98,140 @@
               <option>Other</option>
             </select>
           </label>
-          <label class="field">
+          <label class="vt-field">
             <span>Symptom duration (days)</span>
             <input type="number" id="patientDuration" min="0" max="365" value="3" />
           </label>
         </div>
       </div>
 
-      <div class="panel-block">
-        <h2>2. Select Symptoms</h2>
-        <input type="search" id="symptomSearch" class="search-box" placeholder="Search symptoms… e.g. fever, rash, cough" />
-        <div class="selected-chips" id="selectedChips" aria-live="polite"></div>
-        <div class="symptom-list" id="symptomList">
-          <p class="muted">Loading symptom list…</p>
+      <div class="vt-card" data-panel="symptoms">
+        <h2><span class="vt-card-num">2</span> Select symptoms</h2>
+
+        <div class="vt-search-wrap">
+          <svg class="vt-search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input type="search" id="symptomSearch" class="vt-search-box" placeholder="Search symptoms… e.g. fever, rash, cough" />
         </div>
+
+        <div class="vt-quickadd" id="quickAdd" aria-label="Commonly reported symptoms"></div>
+
+        <div class="vt-selected-row">
+          <div class="vt-selected-chips" id="selectedChips" aria-live="polite"></div>
+          <span class="vt-selected-count" id="selectedCount">0 selected</span>
+        </div>
+
+        <div class="vt-symptom-groups" id="symptomGroups">
+          <p class="vt-muted"><span class="vt-spinner"></span>Loading symptom list…</p>
+        </div>
+
+        <p class="vt-hint" id="selectionHint">Tip: select at least 3–5 symptoms for a more reliable reading.</p>
       </div>
 
-      <button id="predictBtn" class="btn-predict" disabled>
-        <span class="btn-icon">🔍</span> Predict Disease
-      </button>
-      <p class="disclaimer">
+      <div class="vt-predict-bar">
+        <button id="predictBtn" class="vt-btn vt-btn--primary" disabled>
+          <span class="vt-btn-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 12h4l2-8 4 16 2-8h6"/></svg>
+          </span>
+          Predict Disease
+        </button>
+      </div>
+      <p class="vt-disclaimer">
         This tool is a machine learning project, not a medical device. It does not
         provide a diagnosis — always consult a qualified doctor about real symptoms.
       </p>
     </section>
 
-    <!-- ── RIGHT: results ───────────────────────────────────────────── -->
-    <section class="panel panel--results" id="resultsPanel">
-      <div class="results-empty" id="resultsEmpty">
-        <span class="results-empty-icon">🩺</span>
-        <p>Select at least one symptom and click <strong>Predict Disease</strong> to see results here.</p>
+    <!-- ── RIGHT: results ─────────────────────────────────────────────── -->
+    <section class="vt-col vt-col--results" data-panel="results">
+      <div class="vt-card vt-results-card" id="resultsPanel">
+
+        <div class="vt-results-empty" id="resultsEmpty">
+          <svg class="vt-empty-icon" viewBox="0 0 24 24"><path d="M12 21s-7.2-4.6-10-9.3C.3 8.4 1.8 5 5.2 5c2 0 3.4 1.1 4.3 2.4C10.4 6.1 11.8 5 13.8 5c3.4 0 4.9 3.4 3.2 6.7C19.2 16.4 12 21 12 21z"/><path d="M4 12h3l1.4-3 2 6 1.4-3h4"/></svg>
+          <p>Select at least one symptom and press <strong>Predict Disease</strong> to see your results here.</p>
+        </div>
+
+        <div class="vt-results-content" id="resultsContent" hidden>
+
+          <div class="vt-risk-banner" id="riskBanner" data-level="Low">
+            <span class="vt-risk-icon" aria-hidden="true"></span>
+            <div>
+              <div class="vt-risk-label" id="resultRisk">—</div>
+              <div class="vt-risk-guidance" id="riskGuidance">—</div>
+            </div>
+          </div>
+
+          <div class="vt-result-headline">
+            <div class="vt-gauge-wrap">
+              <svg class="vt-gauge" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="vt-gauge-bg" cx="60" cy="60" r="50" fill="none"/>
+                <circle class="vt-gauge-fill" id="gaugeFill" cx="60" cy="60" r="50" fill="none" transform="rotate(-90 60 60)"/>
+              </svg>
+              <div class="vt-gauge-text">
+                <span id="resultConfidence">—</span>
+                <small>confidence</small>
+              </div>
+            </div>
+            <div class="vt-result-title">
+              <span class="vt-eyebrow vt-eyebrow--sm">Most likely match</span>
+              <h2 id="resultDisease">—</h2>
+            </div>
+          </div>
+
+          <div class="vt-result-card">
+            <h3>Disease overview</h3>
+            <dl class="vt-desc-list">
+              <dt>Description</dt><dd id="infoDescription">—</dd>
+              <dt>Common tests</dt><dd id="infoTests">—</dd>
+              <dt>Suggestions</dt><dd id="infoSuggestions">—</dd>
+            </dl>
+          </div>
+
+          <div class="vt-result-card">
+            <h3>Top predictions</h3>
+            <div class="vt-bar-list" id="predictionBars"></div>
+          </div>
+
+          <div class="vt-result-card">
+            <h3>Explainability <span class="vt-method-tag" id="explainMethodTag"></span></h3>
+            <p class="vt-explain-note" id="explainNote" hidden></p>
+            <div class="vt-bar-list vt-bar-list--explain" id="explainBars"></div>
+          </div>
+
+          <div class="vt-result-actions">
+            <button id="downloadBtn" class="vt-btn vt-btn--primary">
+              <span class="vt-btn-icon"><svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg></span>
+              Download PDF Report
+            </button>
+            <button id="shareBtn" class="vt-btn vt-btn--ghost">
+              <span class="vt-btn-icon"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.7l7.6-4.4M8.2 13.3l7.6 4.4"/></svg></span>
+              Share summary
+            </button>
+            <button id="resetBtn" class="vt-btn vt-btn--ghost">
+              <span class="vt-btn-icon"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg></span>
+              New check
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div class="results-content" id="resultsContent" hidden>
-
-        <div class="result-headline" id="resultHeadline">
-          <div class="result-headline-top">
-            <span class="result-risk" id="resultRisk">—</span>
-            <span class="result-confidence" id="resultConfidence">—</span>
-          </div>
-          <h2 id="resultDisease">—</h2>
+      <div class="vt-card vt-history-card">
+        <h2 class="vt-history-head">
+          Recent checks
+          <button id="clearHistoryBtn" class="vt-link-btn" type="button">Clear</button>
+        </h2>
+        <div class="vt-history-list" id="historyList">
+          <p class="vt-muted">Your last few checks on this device will appear here.</p>
         </div>
-
-        <div class="result-card">
-          <h3>Disease Overview</h3>
-          <p><strong>Description:</strong> <span id="infoDescription">—</span></p>
-          <p><strong>Common tests:</strong> <span id="infoTests">—</span></p>
-          <p><strong>Suggestions:</strong> <span id="infoSuggestions">—</span></p>
-        </div>
-
-        <div class="result-card">
-          <h3>Top Predictions</h3>
-          <div class="bar-list" id="predictionBars"></div>
-        </div>
-
-        <div class="result-card">
-          <h3>Explainability <span class="method-tag" id="explainMethodTag"></span></h3>
-          <p class="explain-note" id="explainNote" hidden></p>
-          <div class="bar-list bar-list--explain" id="explainBars"></div>
-        </div>
-
-        <button id="downloadBtn" class="btn-download">
-          <span class="btn-icon">📄</span> Download PDF Report
-        </button>
       </div>
     </section>
 
   </main>
 
-  <footer class="app-footer">
-    <p>Ensemble model (RandomForest + ExtraTrees) · 41 diseases · 132 symptoms ·
-       <a href="https://github.com/arman080325/Disease_Prediction_Project" target="_blank" rel="noopener">Source on GitHub ↗</a>
+  <footer class="vt-footer">
+    <p>Ensemble model (Random Forest + Extra Trees) · 41 diseases · 133 symptoms ·
+       <a href="https://github.com/arman080325/Disease-Prediction-Updated" target="_blank" rel="noopener">Source on GitHub ↗</a>
     </p>
+    <p class="vt-footer-muted">Runs entirely in your browser and on a private API — nothing you enter is stored on a server.</p>
   </footer>
 
   <script src="config.js"></script>
