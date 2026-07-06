@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Disease Prediction System — ML Health Screening</title>
+<meta name="description" content="An ML-powered symptom checker using an ensemble model trained on 41 diseases and 132 symptoms, with SHAP explainability and a downloadable PDF report." />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="app-header-inner">
+      <span class="app-badge">◆ ML Health Screening</span>
+      <h1>Disease Prediction System</h1>
+      <p>Select your symptoms below to get a ranked prediction, model confidence, an explainability
+         breakdown of which symptoms drove the result, and a downloadable PDF report.</p>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <!-- ── LEFT: patient info + symptom picker ─────────────────────── -->
+    <section class="panel panel--input">
+      <div class="panel-block">
+        <h2>1. Patient Details</h2>
+        <div class="field-grid">
+          <label class="field">
+            <span>Name</span>
+            <input type="text" id="patientName" placeholder="John Doe" value="John Doe" />
+          </label>
+          <label class="field">
+            <span>Age</span>
+            <input type="number" id="patientAge" min="1" max="120" value="25" />
+          </label>
+          <label class="field">
+            <span>Gender</span>
+            <select id="patientGender">
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Symptom duration (days)</span>
+            <input type="number" id="patientDuration" min="0" max="365" value="3" />
+          </label>
+        </div>
+      </div>
+
+      <div class="panel-block">
+        <h2>2. Select Symptoms</h2>
+        <input type="search" id="symptomSearch" class="search-box" placeholder="Search symptoms… e.g. fever, rash, cough" />
+        <div class="selected-chips" id="selectedChips" aria-live="polite"></div>
+        <div class="symptom-list" id="symptomList">
+          <p class="muted">Loading symptom list…</p>
+        </div>
+      </div>
+
+      <button id="predictBtn" class="btn-predict" disabled>
+        <span class="btn-icon">🔍</span> Predict Disease
+      </button>
+      <p class="disclaimer">
+        This tool is a machine learning project, not a medical device. It does not
+        provide a diagnosis — always consult a qualified doctor about real symptoms.
+      </p>
+    </section>
+
+    <!-- ── RIGHT: results ───────────────────────────────────────────── -->
+    <section class="panel panel--results" id="resultsPanel">
+      <div class="results-empty" id="resultsEmpty">
+        <span class="results-empty-icon">🩺</span>
+        <p>Select at least one symptom and click <strong>Predict Disease</strong> to see results here.</p>
+      </div>
+
+      <div class="results-content" id="resultsContent" hidden>
+
+        <div class="result-headline" id="resultHeadline">
+          <div class="result-headline-top">
+            <span class="result-risk" id="resultRisk">—</span>
+            <span class="result-confidence" id="resultConfidence">—</span>
+          </div>
+          <h2 id="resultDisease">—</h2>
+        </div>
+
+        <div class="result-card">
+          <h3>Disease Overview</h3>
+          <p><strong>Description:</strong> <span id="infoDescription">—</span></p>
+          <p><strong>Common tests:</strong> <span id="infoTests">—</span></p>
+          <p><strong>Suggestions:</strong> <span id="infoSuggestions">—</span></p>
+        </div>
+
+        <div class="result-card">
+          <h3>Top Predictions</h3>
+          <div class="bar-list" id="predictionBars"></div>
+        </div>
+
+        <div class="result-card">
+          <h3>Explainability <span class="method-tag" id="explainMethodTag"></span></h3>
+          <p class="explain-note" id="explainNote" hidden></p>
+          <div class="bar-list bar-list--explain" id="explainBars"></div>
+        </div>
+
+        <button id="downloadBtn" class="btn-download">
+          <span class="btn-icon">📄</span> Download PDF Report
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <p>Ensemble model (RandomForest + ExtraTrees) · 41 diseases · 132 symptoms ·
+       <a href="https://github.com/arman080325/Disease_Prediction_Project" target="_blank" rel="noopener">Source on GitHub ↗</a>
+    </p>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
